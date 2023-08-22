@@ -9,5 +9,5 @@ def test_case_login():
     print("Response JSON:", res)
     assert response.status_code == 200
 if __name__ == "__main__":
-    pytest.main(test_case_login)11
+    pytest.main(test_case_login)
 
