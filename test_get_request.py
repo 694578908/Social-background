@@ -15,7 +15,7 @@ class TestRequest:
     def test_case_collection(self):
         url = "http://higher8pre.douxiangapp.com/dboxAdmin/v1/nft"
         data = {"supplementaryType":1,"mainImageDisplay":0,"nftType":3,"isOnline":1,
-        "canBuy":1,"numRandom":1,"openSend":'true',"sendCloseTime":0,"sort":0,"title":"测试",
+        "canBuy":1,"numRandom":1,"openSend":"true","sendCloseTime":0,"sort":0,"title":"测试",
         "description":"123","mainImg":"https://dboximg.douxiangapp.com/img/nft/1692756890755.jpg",
         "displayImgs":["https://dboximg.douxiangapp.com/img/nft/1692756926707.png"],
         "authorHeadimg":"https://dboximg.douxiangapp.com/nftProd/img/nft/1672022615423.png",
@@ -24,7 +24,7 @@ class TestRequest:
         "publishName":"龙之岛DOD","detailImgs":["https://dboximg.douxiangapp.com/video/20230823/20230823101529_butf.png"],
         "tags":["12"],"price":0.01,"firstStock":"","stock":10,"limitStock":12,"publishTime":"2023-08-23 10:16:34",
         "categories":[[{"categoryId":"707","level":1,"name":"其他"},{"categoryId":"708","level":2,"name":"其他"}]],
-        "openSell":true,"sellCloseDay":0,"isPriorityBuy":0,"priorityDate":"","priorityTimes":"","isGiveGift":0,"giftType":1,
+        "openSell":"true","sellCloseDay":0,"isPriorityBuy":0,"priorityDate":"","priorityTimes":"","isGiveGift":0,"giftType":1,
         "showType":1,"giftId":"","distribution":1,"distributionProportion":"","holdPictures":[],"isOpen":0,"extraStock":33,
         "lowerShelfCooling":1,"openExclusiveBuy":0,"sellForbidden":0,"firstGetInterdiction":0,"marketGetInterdiction":0,
         "resellFixedPriceStatus":0,"fixedPriceBasis":0,"calculationFormula":0,"publishEndTime":"2023-08-24 00:00:00",
@@ -43,7 +43,8 @@ class TestRequest:
         "nftPlunderDisposition":{"durabilityLimit2":0,"durabilityLimit":0,"energy":0,"physicalPowerScore":0,"lifeScore":0},
         "nftAttrConfig":{"attrType":6,"nftAttrConfigCostBOS":[]},"lifeMode":1,"consumeMode":1}
 
-        headers = {'Accept': 'application/json, text/plain', '*/*,Accept-Language': 'zh-CN,zh;q=0.9,''Authorization': }
+        headers = {'Accept': 'application/json, text/plain','Accept-Language': 'zh-CN,zh;q=0.9','Authorization': TestRequest.token}
+
         response = requests.post(url=url,json=data,headers=headers)
         print(response.json())
 
