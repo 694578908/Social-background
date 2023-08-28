@@ -4,19 +4,20 @@ import pytest
 class TestRequest:
     # 全局变量
     token = ''
-    @pytest.markers.smoke
+
+    @pytest.mark.smoke
     # 账号登录
-    def testcase_login(self):
+    def test_case_login(self):
         url = "http://higher8pre.douxiangapp.com/dboxAdmin/v1/security/manageLogin"
         data = {"userName": "zqj", "pwd": "123456"}
         response = requests.request("post", url=url, json=data)
         print(response.json())
         TestRequest.token = response.json()['data']
-        assert response.status_code == 0
+        assert response.json()['code'] == 0
 
-    @pytest.markers.smoke
+    @pytest.mark.smoke
     # 创建藏品
-    def testcase_collection(self):
+    def test_case_collection(self):
         url = "http://higher8pre.douxiangapp.com/dboxAdmin/v1/nft"
         data = {"supplementaryType": 1,"mainImageDisplay":0,"nftType":3,"isOnline":1,
         "canBuy":1,"numRandom":1,"openSend":"true","sendCloseTime":0,"sort":0,"title":"自动化测试",
@@ -51,10 +52,10 @@ class TestRequest:
 
         response = requests.request("post", url=url, json=data, headers=headers)
         print(response.json())
-        assert response.status_code == 0
+        assert response.json()['code'] == 0
 
     # 编辑藏品
-    def testcase_edit_Collections(self):
+    def test_case_edit(self):
         url = "higher8pre.douxiangapp.com/dboxAdmin/v1/nft/10000148"
         data = {"id":"10000148","title":"编辑自动化测试","selfCode":"null","description":"编辑自动化测试",
                 "mainImg":"https://dboximg.douxiangapp.com/img/nft/1692963675800.png","displayImgs":["https://dboximg.douxiangapp.com/img/nft/1692963680385.png"],
@@ -107,11 +108,11 @@ class TestRequest:
                 "pictureRepertory":"null","exclusiveRepertory":"null"}
         response = requests.request("put", url=url, json=data)
         print(response.json())
-        assert response.status_code == 0
+        assert response.json()['code'] == 0
 
 
 
 
-    if __name__ == "__main__":
-        pytest.main()
+
+
 
