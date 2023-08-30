@@ -6,23 +6,39 @@ from common.redis_extract import read_redis
 
 class TestRequest:
 
-    @pytest.mark.smoke
+    # @pytest.mark.smoke
     # 登录账号密码
-    def test_case_managelogin(self):
-        url = "http://higher8pre.douxiangapp.com/dboxAdmin/v1/security/manageLogin"
-        data = {"userName": "zqj", "pwd": "123456"}
-        response = requests.request("post", url=url, json=data)
+    @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml'))
+    def test_case_managelogin(self, case):
+        print(case['name'])
+        print(case['validate'])
+        url = case['requests']['url']
+        data = case['requests']['data']
+        method = case['requests']['method']
+        response = requests.request(method, url=url, json=data)
         print(response.json())
         read_redis()    # 写入验证码
 
     # 提交验证码
-    def test_case_gettoken(self):
+    @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('extract_code.yml'))
+    def test_case_gettoken(self, case):
         code = YamlUtil().read_extract_yaml('admin_user_15881086121')  # 获取extract.yml里的验证码code
-        url = "http://higher8pre.douxiangapp.com/dboxAdmin/v1/security/getToken"
-        data = {"userName": "zqj", "pwd": "123456", "code": code, "type": 0}
-        response = requests.request("post", url=url, json=data)
-        YamlUtil().write_extract_yaml({'message': response.json()['message']})  # 写入token到extract.yml
-        print(response.json())
+        print(case['name'])
+        print(case['validate'])
+
+        url = case['requests']['url']
+        name = case['requests']['data']['name']
+        pwd = case['requests']['data']['pwd']
+        code = case['requests']['data']['code']
+        type = case['requests']['data']['type']
+        data = name, pwd, code, type
+        method = case['requests']['method']
+        data['code'] = code
+        # url = "http://higher8pre.douxiangapp.com/dboxAdmin/v1/security/getToken"
+        # data = {"userName": "zqj", "pwd": "123456", "code": code, "type": 0}
+        response = requests.request(method, url=url, json=data)
+        # YamlUtil().write_extract_yaml({'message': response.json()['message']})  # 写入token到extract.yml
+        # print(response.json())
 
 
 

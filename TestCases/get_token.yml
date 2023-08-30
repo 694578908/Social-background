@@ -1,0 +1,9 @@
+-
+  name: 登录账号密码
+  requests:
+    method: post
+    url: http://higher8pre.douxiangapp.com/dboxAdmin/v1/security/manageLogin
+    data:
+      userName: zqj
+      pwd: 123456
+  validate: None

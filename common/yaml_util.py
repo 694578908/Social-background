@@ -19,3 +19,9 @@ class YamlUtil:
     def clear_extract_yaml(self):
         with open(os.getcwd() + "/extract.yml", mode='w', encoding='utf-8')as f:
             f.truncate()
+
+    def read_testcase_yaml(self, yaml_name):
+        with open(os.getcwd() + "/TestCases/" + yaml_name, mode='r', encoding='utf-8')as f:
+            value = yaml.load(stream=f, Loader=yaml.FullLoader)
+            return value
+
