@@ -14,6 +14,7 @@ class TestRequest:
         response = requests.request("post", url=url, json=data)
         print(response.json())
         read_redis()    # 写入验证码
+
     # 提交验证码
     def test_case_gettoken(self):
         code = YamlUtil().read_extract_yaml('admin_user_15881086121')  # 获取extract.yml里的验证码code
