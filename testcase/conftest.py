@@ -1,5 +1,4 @@
 import pytest
-import os
 from common.yaml_util import YamlUtil
 
 
