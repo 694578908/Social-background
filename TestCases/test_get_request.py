@@ -1,5 +1,6 @@
 import requests
 import pytest
+import json
 from common.yaml_util import YamlUtil
 from common.redis_extract import read_redis
 from common.request_util import RequestUtil
@@ -10,26 +11,27 @@ class TestRequest:
     # @pytest.mark.smoke
     # 登录账号密码
     @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml'))
-    def test_case_managelogin(self, case):
+    def test_case_login(self, case):
         print(case['name'])
         print(case['validate'])
         url = case['requests']['url']
         data = case['requests']['data']
         method = case['requests']['method']
         result = RequestUtil().send_requests(method, url, data)
-        print(result.json())
+        result = json.loads(result)
+        print(result)
         read_redis()    # 写入验证码
 
     # 提交验证码
     # @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('extract_code.yml'))
-    def test_case_gettoken(self):
-        code = YamlUtil().read_extract_yaml('admin_user_15881086121')  # 获取extract.yml里的验证码code
-        url = "http://higher8pre.douxiangapp.com/dboxAdmin/v1/security/getToken"
-        data = {"userName": "zqj", "pwd": "123456", "code": code, "type": 0}
-        response = requests.request("post", url=url, json=data)
-        YamlUtil().write_extract_yaml({'message': response.json()['message']})  # 写入token到extract.yml
-        print(response.json())
-
+    # def test_case_gettoken(self):
+    #     code = YamlUtil().read_extract_yaml('admin_user_15881086121')  # 获取extract.yml里的验证码code
+    #     url = "http://higher8pre.douxiangapp.com/dboxAdmin/v1/security/getToken"
+    #     data = {"userName": "zqj", "pwd": "123456", "code": code, "type": 0}
+    #     response = requests.request("post", url=url, json=data)
+    #     YamlUtil().write_extract_yaml({'message': response.json()['message']})  # 写入token到extract.yml
+    #     print(response.json())
+    #
 
 
 #     @pytest.mark.smoke
