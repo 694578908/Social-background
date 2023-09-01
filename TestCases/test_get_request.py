@@ -4,6 +4,7 @@ import json
 from common.yaml_util import YamlUtil
 from common.redis_extract import read_redis
 from common.request_util import RequestUtil
+import jsonpath
 
 
 class TestRequest:
@@ -17,22 +18,38 @@ class TestRequest:
         url = case['requests']['url']
         data = case['requests']['data']
         method = case['requests']['method']
-        result = RequestUtil().send_requests(method, url, data)
-        result = json.loads(result)
-        print(result)
-        read_redis()    # 写入验证码
+
+        if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
+            if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') and jsonpath.jsonpath(case, '$..data'):
+                result = RequestUtil().send_requests(method, url, data)
+                print(json.loads(result), type(json.loads(result)))
+                read_redis()  # 把写入验证码extract.yml文件里
+                for assert_type in case['validate']:
+                    for key, value in dict(assert_type).items():
+                        if key == 'equals':
+                            pass
+                        elif key == 'contains':
+                            if value in result:
+                                print("断言成功")
+                            else:
+                                print("断言失败")
+            else:
+                print("在yml文件requests目录下必须要有method,url,data")
+        else:
+            print("yml一级关键字必须包含:name,requests,validate")
 
     # 提交验证码
-    # @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('extract_code.yml'))
-    # def test_case_gettoken(self):
-    #     code = YamlUtil().read_extract_yaml('admin_user_15881086121')  # 获取extract.yml里的验证码code
-    #     url = "http://higher8pre.douxiangapp.com/dboxAdmin/v1/security/getToken"
-    #     data = {"userName": "zqj", "pwd": "123456", "code": code, "type": 0}
-    #     response = requests.request("post", url=url, json=data)
-    #     YamlUtil().write_extract_yaml({'message': response.json()['message']})  # 写入token到extract.yml
-    #     print(response.json())
-    #
-
+    @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('extract_code.yml'))
+    def test_case_gettoken(self, case):
+        print(case['name'])
+        print(case['validate'])
+        url = (case['requests']['url'])
+        method = (case['requests']['method'])
+        data = (case['requests']['data'])
+        # 获取extract.yml里的验证码并赋值到extract_code.yaml的code里
+        data['code'] = YamlUtil().read_extract_yaml('admin_user_15881086121')
+        result = RequestUtil().send_requests(method, url, data)
+        print(json.loads(result))
 
 #     @pytest.mark.smoke
 #     # 创建藏品
@@ -128,10 +145,3 @@ class TestRequest:
 #         response = requests.request("put", url=url, json=data)
 #         print(response.json())
 #         assert response.json()['code'] == 0
-
-
-
-
-
-
-
