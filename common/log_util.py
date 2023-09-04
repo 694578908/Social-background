@@ -3,26 +3,27 @@ import os
 
 
 def log_info(message):
+    # 创建一个日志记录器
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
 
-    log_file_path = os.path.join('log', 'test.log')
-    # 创建一个文件处理器，将日志写入到文件中
+    # 日志文件路径
+    os.path.join('log', 'test.log')
 
-    handler = logging.FileHandler(log_file_path)
+    # 移除之前添加的处理器，如果存在的话
+    for handler in logger.handlers:
+        logger.removeHandler(handler)
+
+    # 创建一个处理器，将日志同时写入文件和输出到控制台
+    handler = logging.StreamHandler()
     handler.setLevel(logging.DEBUG)
-
-    # 创建一个控制台处理器，将日志输出到控制台
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.DEBUG)
 
     # 定义日志格式
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
-    console_handler.setFormatter(formatter)
+
     # 将处理器添加到日志记录器
     logger.addHandler(handler)
-    logger.addHandler(console_handler)
+
+    # 记录日志信息
     logger.info(message)
-
-

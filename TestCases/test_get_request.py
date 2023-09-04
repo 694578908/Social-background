@@ -60,7 +60,6 @@ class TestRequest:
                 log_util.log_info('用例标题:{},请求地址为:{}, 请求参数为:{}, 接口返回信息为:{}'.format(case['name'], url, data, result))
                 message = json.loads(result)['message']
                 YamlUtil().write_extract_yaml({'token': message})
-
                 for assert_type in case['validate']:
                     for key, value in dict(assert_type).items():
                         if key == 'equals':
@@ -70,6 +69,11 @@ class TestRequest:
                                 print("断言成功")
                             else:
                                 print("断言失败")
+            else:
+                print("在yml文件requests目录下必须要有method,url,data,headers")
+        else:
+            print("yml一级关键字必须包含:name,requests,validate")
+
 
 #     @pytest.mark.smoke
 #     # 创建藏品
