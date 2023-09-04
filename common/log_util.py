@@ -1,12 +1,15 @@
 import logging
+import os
 
 
 def log_info(message):
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
+
+    log_file_path = os.path.join('log', 'test.log')
     # 创建一个文件处理器，将日志写入到文件中
 
-    handler = logging.FileHandler('test.log')
+    handler = logging.FileHandler(log_file_path)
     handler.setLevel(logging.DEBUG)
 
     # 创建一个控制台处理器，将日志输出到控制台
