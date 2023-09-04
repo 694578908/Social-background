@@ -11,7 +11,7 @@ class TestRequest:
 
     # @pytest.mark.smoke
     # 登录账号密码
-    @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml'))
+    @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml')['login'])
     def test_case_login(self, case):
         print(case['name'])
         print(case['validate'])
@@ -39,7 +39,7 @@ class TestRequest:
             print("yml一级关键字必须包含:name,requests,validate")
 
     # 提交验证码
-    @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('extract_code.yml'))
+    @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml')['get_token'])
     def test_case_gettoken(self, case):
         print(case['name'])
         print(case['validate'])

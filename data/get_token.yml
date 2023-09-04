@@ -1,0 +1,23 @@
+login:
+- name: 登录账号密码
+  requests:
+    method: post
+    url: http://higher8pre.douxiangapp.com/dboxAdmin/v1/security/manageLogin
+    data:
+      userName: zqj
+      pwd: 123456
+  validate:
+    - equals: {code: 0}
+    - contains: code
+
+get_token:
+- name: 提交验证码
+  requests:
+    method: post
+    url: http://higher8pre.douxiangapp.com/dboxAdmin/v1/security/getToken
+    data:
+      userName: zqj
+      pwd: 123456
+      code: code
+      type: 0
+  validate: None
