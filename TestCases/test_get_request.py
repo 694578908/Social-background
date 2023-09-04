@@ -1,10 +1,10 @@
-import requests
 import pytest
 import json
 from common.yaml_util import YamlUtil
 from common.redis_extract import read_redis
 from common.request_util import RequestUtil
 import jsonpath
+import logging
 
 
 class TestRequest:
@@ -15,14 +15,17 @@ class TestRequest:
     def test_case_login(self, case):
         print(case['name'])
         print(case['validate'])
+        headers = case['requests']['headers']
         url = case['requests']['url']
         data = case['requests']['data']
         method = case['requests']['method']
 
         if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
-            if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') and jsonpath.jsonpath(case, '$..data'):
-                result = RequestUtil().send_requests(method, url, data)
+            if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') and jsonpath.jsonpath(case, '$..data')\
+                    and jsonpath.jsonpath(case, '$..headers'):
+                result = RequestUtil().send_requests(method, url, headers, data)
                 print(json.loads(result), type(json.loads(result)))
+                logging.info('请求地址为{}, 请求参数为{}, 接口返回信息为{}'.format(url, data, result))
                 read_redis()  # 把写入验证码extract.yml文件里
                 for assert_type in case['validate']:
                     for key, value in dict(assert_type).items():
@@ -39,17 +42,33 @@ class TestRequest:
             print("yml一级关键字必须包含:name,requests,validate")
 
     # 提交验证码
-    @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml')['get_token'])
-    def test_case_gettoken(self, case):
-        print(case['name'])
-        print(case['validate'])
-        url = (case['requests']['url'])
-        method = (case['requests']['method'])
-        data = (case['requests']['data'])
-        # 获取extract.yml里的验证码并赋值到extract_code.yaml的code里
-        data['code'] = YamlUtil().read_extract_yaml('admin_user_15881086121')
-        result = RequestUtil().send_requests(method, url, data)
-        print(json.loads(result))
+    # @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml')['get_token'])
+    # def test_case_gettoken(self, case):
+    #     print(case['name'])
+    #     print(case['validate'])
+    #     headers = case['requests']['headers']
+    #     url = (case['requests']['url'])
+    #     method = (case['requests']['method'])
+    #     data = (case['requests']['data'])
+    #
+    #     if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
+    #         if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') and jsonpath.jsonpath(case, '$..data') \
+    #                 and jsonpath.jsonpath(case, '$..headers'):
+    #             # 获取extract.yml里的验证码并赋值到extract_code.yaml的code里
+    #             data['code'] = YamlUtil().read_extract_yaml('admin_user_15881086121')
+    #             result = RequestUtil().send_requests(method, url, headers, data)
+    #             LogUtil().info('请求地址为{}, 请求参数为{}, 接口返回信息为{}'.format(url, data, result))
+    #             message = json.loads(result)['message']
+    #             YamlUtil().write_extract_yaml({'token': message})
+    #             for assert_type in case['validate']:
+    #                 for key, value in dict(assert_type).items():
+    #                     if key == 'equals':
+    #                         pass
+    #                     elif key == 'contains':
+    #                         if value in result:
+    #                             print("断言成功")
+    #                         else:
+    #                             print("断言失败")
 
 #     @pytest.mark.smoke
 #     # 创建藏品
@@ -84,7 +103,7 @@ class TestRequest:
 #         "nftPlunderDisposition":{"durabilityLimit2":0,"durabilityLimit":0,"energy":0,"physicalPowerScore":0,"lifeScore":0},
 #         "nftAttrConfig":{"attrType":6,"nftAttrConfigCostBOS":[]},"lifeMode":1,"consumeMode":1}
 #
-#         headers = {'Accept': 'application/json, text/plain', 'Accept-Language': 'zh-CN,zh;q=0.9', 'Authorization': TestRequest.token}
+        # headers = {'Accept': 'application/json, text/plain', 'Accept-Language': 'zh-CN,zh;q=0.9', 'Authorization': TestRequest.token}
 #
 #         response = requests.request("post", url=url, json=data, headers=headers)
 #         print(response.json())
