@@ -10,19 +10,18 @@ from common import log_util
 class TestRequest:
 
     # @pytest.mark.smoke
-    # 登录账号密码
+    登录账号密码
     @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml')['login'])
     def test_case_login(self, case):
-        print(case['name'])
-        print(case['validate'])
-        headers = case['requests']['headers']
-        url = case['requests']['url']
-        data = case['requests']['data']
-        method = case['requests']['method']
-
         if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
             if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') and jsonpath.jsonpath(case, '$..data')\
                     and jsonpath.jsonpath(case, '$..headers'):
+                print(case['name'])
+                print(case['validate'])
+                headers = case['requests']['headers']
+                url = case['requests']['url']
+                data = case['requests']['data']
+                method = case['requests']['method']
                 result = RequestUtil().send_requests(method, url, headers, data)
                 print(json.loads(result), type(json.loads(result)))
                 log_util.log_info('用例标题:{},请求地址为:{}, 请求参数为:{}, 接口返回信息为:{}'.format(case['name'], url, data, result))
@@ -44,16 +43,15 @@ class TestRequest:
     # 提交验证码
     @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml')['get_token'])
     def test_case_gettoken(self, case):
-        print(case['name'])
-        print(case['validate'])
-        headers = case['requests']['headers']
-        url = (case['requests']['url'])
-        method = (case['requests']['method'])
-        data = (case['requests']['data'])
-
         if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
             if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') and jsonpath.jsonpath(case, '$..data') \
                     and jsonpath.jsonpath(case, '$..headers'):
+                print(case['name'])
+                print(case['validate'])
+                headers = case['requests']['headers']
+                url = (case['requests']['url'])
+                method = (case['requests']['method'])
+                data = (case['requests']['data'])
                 # 获取extract.yml里的验证码并赋值到extract_code.yaml的code里
                 data['code'] = YamlUtil().read_extract_yaml('admin_user_15881086121')
                 result = RequestUtil().send_requests(method, url, headers, data)
