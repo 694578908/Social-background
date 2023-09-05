@@ -10,7 +10,7 @@ from common import log_util
 class TestRequest:
 
     # @pytest.mark.smoke
-    登录账号密码
+    # 登录账号密码
     @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml')['login'])
     def test_case_login(self, case):
         if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
