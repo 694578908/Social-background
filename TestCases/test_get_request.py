@@ -46,7 +46,9 @@ class TestRequest:
     @pytest.mark.parametrize('case', variable())
     # # @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml')['get_token'])
     def test_case_gettoken(self, case):
-        print(case)
+        get_token_cases = case.get('get_token', [])
+        for get_token_case in get_token_cases:
+            print(get_token_case)
     # if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
     #     if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') and jsonpath.jsonpath(case, '$..data') \
     #             and jsonpath.jsonpath(case, '$..headers'):
