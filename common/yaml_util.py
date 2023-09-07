@@ -26,3 +26,14 @@ class YamlUtil:
             value = yaml.load(stream=f, Loader=yaml.FullLoader)
             return value
 
+    # 变量替换
+    def func_yaml(self, data):
+        # isinstance判断数据类型，TRUE
+        if isinstance(data, dict):
+            for key, value in data.items():
+                if '${' in str(value) and '}' in str(value):
+                    start = str(value).index('${')
+                    end = str(value).index('}')
+                    func_name = str(value)[start + 2:end]
+                    data[key] = str(value)[0:start] + str(eval(func_name)) + str(value)[end + 1:len(str(value))]
+        return data

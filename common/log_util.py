@@ -8,7 +8,7 @@ def log_info(message):
     logger.setLevel(logging.DEBUG)
 
     # 日志文件路径
-    os.path.join('log', 'test.log')
+    os.path.join('()log', 'test.log')
 
     # 移除之前添加的处理器，如果存在的话
     for handler in logger.handlers:

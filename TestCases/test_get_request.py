@@ -1,5 +1,7 @@
 import pytest
 import json
+
+from common.variable import variable
 from common.yaml_util import YamlUtil
 from common.redis_extract import read_redis
 from common.request_util import RequestUtil
@@ -14,7 +16,7 @@ class TestRequest:
     @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml')['login'])
     def test_case_login(self, case):
         if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
-            if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') and jsonpath.jsonpath(case, '$..data')\
+            if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') and jsonpath.jsonpath(case, '$..data') \
                     and jsonpath.jsonpath(case, '$..headers'):
                 print(case['name'])
                 print(case['validate'])
@@ -25,7 +27,7 @@ class TestRequest:
                 result = RequestUtil().send_requests(method, url, headers, data)
                 print(json.loads(result), type(json.loads(result)))
                 log_util.log_info('用例标题:{},请求地址为:{}, 请求参数为:{}, 接口返回信息为:{}'.format(case['name'], url, data, result))
-                read_redis()  # 把写入验证码extract.yml文件里
+                read_redis()  # 调取redis并把验证码写入extract.yml文件里
                 for assert_type in case['validate']:
                     for key, value in dict(assert_type).items():
                         if key == 'equals':
@@ -41,37 +43,38 @@ class TestRequest:
             print("yml一级关键字必须包含:name,requests,validate")
 
     # 提交验证码
-    @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml')['get_token'])
+    @pytest.mark.parametrize('case', variable())
+    # # @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml')['get_token'])
     def test_case_gettoken(self, case):
-        if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
-            if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') and jsonpath.jsonpath(case, '$..data') \
-                    and jsonpath.jsonpath(case, '$..headers'):
-                print(case['name'])
-                print(case['validate'])
-                headers = case['requests']['headers']
-                url = (case['requests']['url'])
-                method = (case['requests']['method'])
-                data = (case['requests']['data'])
-                # 获取extract.yml里的验证码并赋值到extract_code.yaml的code里
-                data['code'] = YamlUtil().read_extract_yaml('admin_user_15881086121')
-                result = RequestUtil().send_requests(method, url, headers, data)
-                log_util.log_info('用例标题:{},请求地址为:{}, 请求参数为:{}, 接口返回信息为:{}'.format(case['name'], url, data, result))
-                message = json.loads(result)['message']
-                YamlUtil().write_extract_yaml({'token': message})
-                for assert_type in case['validate']:
-                    for key, value in dict(assert_type).items():
-                        if key == 'equals':
-                            pass
-                        elif key == 'contains':
-                            if value in result:
-                                print("断言成功")
-                            else:
-                                print("断言失败")
-            else:
-                print("在yml文件requests目录下必须要有method,url,data,headers")
-        else:
-            print("yml一级关键字必须包含:name,requests,validate")
-
+        print(case)
+    # if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
+    #     if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') and jsonpath.jsonpath(case, '$..data') \
+    #             and jsonpath.jsonpath(case, '$..headers'):
+    #         print(case['name'])
+    #         print(case['validate'])
+    #         headers = case['requests']['headers']
+    #         url = (case['requests']['url'])
+    #         method = (case['requests']['method'])
+    #         data = (case['requests']['data'])
+    #         # 获取extract.yml里的验证码并赋值到extract_code.yaml的code里
+    #         data['code'] = YamlUtil().read_extract_yaml('admin_user_15881086121')
+    #         result = RequestUtil().send_requests(method, url, headers, data)
+    #         log_util.log_info('用例标题:{},请求地址为:{}, 请求参数为:{}, 接口返回信息为:{}'.format(case['name'], url, data, result))
+    #         message = json.loads(result)['message']
+    #         YamlUtil().write_extract_yaml({'token': message})
+    #         for assert_type in case['validate']:
+    #             for key, value in dict(assert_type).items():
+    #                 if key == 'equals':
+    #                     pass
+    #                 elif key == 'contains':
+    #                     if value in result:
+    #                         print("断言成功")
+    #                     else:
+    #                         print("断言失败")
+    #     else:
+    #         print("在yml文件requests目录下必须要有method,url,data,headers")
+    # else:
+    #     print("yml一级关键字必须包含:name,requests,validate")
 
 #     @pytest.mark.smoke
 #     # 创建藏品
@@ -106,7 +109,7 @@ class TestRequest:
 #         "nftPlunderDisposition":{"durabilityLimit2":0,"durabilityLimit":0,"energy":0,"physicalPowerScore":0,"lifeScore":0},
 #         "nftAttrConfig":{"attrType":6,"nftAttrConfigCostBOS":[]},"lifeMode":1,"consumeMode":1}
 #
-        # headers = {'Accept': 'application/json, text/plain', 'Accept-Language': 'zh-CN,zh;q=0.9', 'Authorization': TestRequest.token}
+# headers = {'Accept': 'application/json, text/plain', 'Accept-Language': 'zh-CN,zh;q=0.9', 'Authorization': TestRequest.token}
 #
 #         response = requests.request("post", url=url, json=data, headers=headers)
 #         print(response.json())

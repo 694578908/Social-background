@@ -20,7 +20,7 @@ get_token:
     data:
       userName: zqj
       pwd: 123456
-      code: code
+      code: ${admin_user_15881086121}
       type: 0
   validate:
     - equals: {code: 0}
