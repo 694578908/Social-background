@@ -58,8 +58,6 @@ class TestRequest:
                     url = (case['requests']['url'])
                     method = (case['requests']['method'])
                     data = (case['requests']['data'])
-                    # 获取extract.yml里的验证码并赋值到extract_code.yaml的code里
-                    data['code'] = YamlUtil().read_extract_yaml('admin_user_15881086121')
                     result = RequestUtil().send_requests(method, url, headers, data)
                     log_util.log_info('用例标题:{},请求地址为:{}, 请求参数为:{}, 接口返回信息为:{}'.format(case['name'], url, data, result))
                     message = json.loads(result)['message']
