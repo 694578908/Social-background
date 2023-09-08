@@ -12,10 +12,10 @@ from common import log_util
 def test_case(case_type, value):
     cases = value.get(case_type, [])
     for case in cases:
-        execute_test_case(case)
+        case_execute(case)
 
 
-def execute_test_case(case):
+def case_execute(case):
     # 测试用例的执行逻辑，与之前的代码相同
     if 'name' not in case or 'requests' not in case or 'validate' not in case:
         print("yml一级关键字必须包含:name,requests,validate")
@@ -32,6 +32,7 @@ def execute_test_case(case):
     method = case['requests']['method']
     data = case['requests']['data']
     result = RequestUtil().send_requests(method, url, headers, data)
+    print(json.loads(result))
     log_util.log_info(f'用例标题:{name},请求地址为:{url}, 请求参数为:{data}, 接口返回信息为:{result}')
 
     if case['validate']:
