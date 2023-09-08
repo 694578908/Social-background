@@ -26,17 +26,19 @@ get_token:
     - equals: {code: 0}
     - contains: code
 
-#collection:
-#- name: 创建藏品
-#  requests:
-#    method: post
-#    url: http://higher8pre.douxiangapp.com/dboxAdmin/v1/nft
-#    headers: {'Content-Type':'application/json','Authorization': ${token}}
-#    data:
-#      userName:
-#      pwd:
-#      code:
-#      type:
-#  validate:
-#    - equals: {code: 0}
-#    - contains: code
+collection:
+- name: 创建藏品
+  requests:
+    method: post
+    url: http://higher8pre.douxiangapp.com/dboxAdmin/v1/nft
+    headers:
+      Content-Type: application/json
+      Authorization: ${token}
+    data:
+      userName:
+      pwd:
+      code:
+      type:
+  validate:
+    - equals: {code: 0}
+    - contains: code
