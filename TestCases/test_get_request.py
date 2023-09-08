@@ -44,7 +44,6 @@ class TestRequest:
 
     # 提交验证码
     @pytest.mark.parametrize('value', variable())
-    # @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('get_token.yml')['get_token'])
     def test_case_gettoken(self, value):
         cases = value.get('get_token', [])
         print(cases)
