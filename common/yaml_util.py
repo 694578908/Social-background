@@ -6,9 +6,13 @@ class YamlUtil:
 
     # 读取extract.yml
     def read_extract_yaml(self, key):
-        with open(os.getcwd() + "/data/extract.yml", mode='r', encoding='utf-8')as f:
-            value = yaml.load(stream=f, Loader=yaml.FullLoader)
-            return value[key]
+        try:
+            with open(os.getcwd() + "/data/extract.yml", mode='r', encoding='utf-8')as f:
+                value = yaml.load(stream=f, Loader=yaml.FullLoader)
+                return value[key]
+        except Exception as e:
+            print(f"{e}")
+            return None
 
     # 写入extract.yml
     def write_extract_yaml(self, data):
@@ -26,7 +30,7 @@ class YamlUtil:
             value = yaml.load(stream=f, Loader=yaml.FullLoader)
             return value
 
-    # 变量替换
+    # 定位"${}"
     def func_yaml(self, data):
         # isinstance判断数据类型，TRUE
         if isinstance(data, dict):
