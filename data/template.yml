@@ -1,5 +1,5 @@
-get_token:
-- name: 13231
+collection:
+- name: A
   requests:
     method: post
     url: http://higher8pre.douxiangapp.com/dboxAdmin/v1/security/getToken
@@ -11,4 +11,29 @@ get_token:
       type: 0
   validate:
     - equals: {code: 0}
-    - contains: code
+
+- name: B
+  requests:
+    method: post
+    url: http://higher8pre.douxiangapp.com/dboxAdmin/v1/security/getToken
+    headers: {'Content-Type':'application/json'}
+    data:
+      userName: zqj
+      pwd: 123456
+      code: ${admin_user_15881086121}
+      type: 0
+  validate:
+    - equals: {code: 0}
+
+- name: C
+  requests:
+    method: post
+    url: http://higher8pre.douxiangapp.com/dboxAdmin/v1/security/getToken
+    headers: {'Content-Type':'application/json'}
+    data:
+      userName: zqj
+      pwd: 123456
+      code: ${admin_user_15881086121}
+      type: 0
+  validate:
+    - equals: {code: 0}
