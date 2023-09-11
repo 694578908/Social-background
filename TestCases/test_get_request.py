@@ -5,7 +5,7 @@ from common.redis_extract import read_redis
 from common.request_util import RequestUtil
 import jsonpath
 from common import log_util
-from common.variable import variable
+from common.variable import variable_code, variable_token
 
 
 class TestRequest:
@@ -24,18 +24,13 @@ class TestRequest:
                 data = case['requests']['data']
                 method = case['requests']['method']
                 result = RequestUtil().send_requests(method, url, headers, data)
-                print(json.loads(result), type(json.loads(result)))
-                log_util.log_info('用例标题:{},请求地址为:{}, 请求参数为:{}, 接口返回信息为:{}'.format(case['name'], url, data, result))
+                res = (json.loads(result))
+                log_util.log_info('用例标题:{},请求地址为:{}, 请求参数为:{}'.format(case['name'], url, data))
+                log_util.log_info('实际结果接口返回信息为:{}'.format(result))
                 read_redis()  # 调取redis并把验证码写入extract.yml文件里
-                for assert_type in case['validate']:
-                    for key, value in dict(assert_type).items():
-                        if key == 'equals':
-                            pass
-                        elif key == 'contains':
-                            if value in result:
-                                print("断言成功")
-                            else:
-                                print("断言失败")
+                log_util.log_info('预期结果：code 应为: {}'.format(case['validate'][0]['equals']['code']))
+                assert res['code'] == case['validate'][0]['equals']['code']
+
             else:
                 print("在yml文件requests目录下必须要有method,url,data")
         else:
@@ -43,7 +38,7 @@ class TestRequest:
 
     # 提交验证码
     def test_case_gettoken(self):
-        data = variable()
+        data = variable_code()
         value = data[0]['get_token']
         for case in value:
             if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
@@ -56,62 +51,45 @@ class TestRequest:
                     method = (case['requests']['method'])
                     data = (case['requests']['data'])
                     result = RequestUtil().send_requests(method, url, headers, data)
-                    log_util.log_info('用例标题:{},请求地址为:{}, 请求参数为:{}, 接口返回信息为:{}'.format(case['name'], url, data, result))
+                    res = (json.loads(result))
+                    log_util.log_info('用例标题:{},请求地址为:{}, 请求参数为:{}'.format(case['name'], url, data))
+                    log_util.log_info('实际结果接口返回信息为:{}'.format(result))
                     message = json.loads(result)['message']
                     YamlUtil().write_extract_yaml({'token': message})
-                    for assert_type in case['validate']:
-                        for key, value in dict(assert_type).items():
-                            if key == 'equals':
-                                pass
-                            elif key == 'contains':
-                                if value in result:
-                                    print("断言成功")
-                                else:
-                                    print("断言失败")
+                    log_util.log_info('预期结果：code 应为: {}'.format(case['validate'][0]['equals']['code']))
+                    assert res['code'] == case['validate'][0]['equals']['code']
                 else:
                     print("在yml文件requests目录下必须要有method,url,data,headers")
             else:
                 print("yml一级关键字必须包含:name,requests,validate")
 
-#     @pytest.mark.smoke
-#     # 创建藏品
-#     def test_case_collection(self):
-#         url = "http://higher8pre.douxiangapp.com/dboxAdmin/v1/nft"
-#         data = {"supplementaryType": 1,"mainImageDisplay":0,"nftType":3,"isOnline":1,
-#         "canBuy":1,"numRandom":1,"openSend":"true","sendCloseTime":0,"sort":0,"title":"自动化测试",
-#         "description":"123","mainImg":"https://dboximg.douxiangapp.com/img/nft/1692756890755.jpg",
-#         "displayImgs":["https://dboximg.douxiangapp.com/img/nft/1692756926707.png"],
-#         "authorHeadimg":"https://dboximg.douxiangapp.com/nftProd/img/nft/1672022615423.png",
-#         "authorId":15,"authorName":"龙之岛DOD","publishId":5,"publishHeadimg":
-#         "https://dboximg.douxiangapp.com/nftProd/img/nft/1672021311005.png",
-#         "publishName":"龙之岛DOD","detailImgs":["https://dboximg.douxiangapp.com/video/20230823/20230823101529_butf.png"],
-#         "tags":["12"],"price":0.01,"firstStock":"","stock":10,"limitStock":12,"publishTime":"2023-08-23 10:16:34",
-#         "categories":[[{"categoryId":"707","level":1,"name":"其他"},{"categoryId":"708","level":2,"name":"其他"}]],
-#         "openSell":"true","sellCloseDay":0,"isPriorityBuy":0,"priorityDate":"","priorityTimes":"","isGiveGift":0,"giftType":1,
-#         "showType":1,"giftId":"","distribution":1,"distributionProportion":"","holdPictures":[],"isOpen":0,"extraStock":33,
-#         "lowerShelfCooling":1,"openExclusiveBuy":0,"sellForbidden":0,"firstGetInterdiction":0,"marketGetInterdiction":0,
-#         "resellFixedPriceStatus":0,"fixedPriceBasis":0,"calculationFormula":0,"publishEndTime":"2023-08-24 00:00:00",
-#         "displayLevel":1,"limitUser":0,"displayStock":22,"branchWarehouse":2,"ordinaryRepertory":12,"pictureRepertory":12,
-#         "exclusiveRepertory":32,"limitBrush":1,"timesMode":1,"openDiscount":1,"discountMode":1,"nftRepertorySeparationVo":{},
-#         "levelId":0,"nftAttrs":[{"attrId":1,"attrValue":100,"attrInitValue":100,"attr_name":"精力值"}],
-#         "chainSeriesDTO":{"chainUnitDTOS":[],"templateImg":"","raceId":1},"limitRule":[],"limitType":0,"exchangeTimeOpen":0,
-#         "prizeGiftList":[],"integral":[{"integralType":2,"isShow":'false',"name":"电池配置"},{"integralType":3,"isShow":'false',"name":"砖块配置"},
-#                                        {"integralType":4,"isShow":'false',"name":"龙精配置"},{"integralType":5,"isShow":'false',"name":"金蛋配置"},
-#                                        {"integralType":6,"isShow":'false',"name":"龙珠配置"},{"integralType":7,"isShow":'false',"name":"龙核配置"},
-#                                        {"integralType":8,"isShow":'false',"name":"龙鳞配置"},{"integralType":9,"isShow":'false',"name":"龙血配置"},
-#                                        {"integralType":10,"isShow":'false',"name":"龙晶配置"},{"integralType":11,"isShow":'false',"name":"渣渣辉配置"},
-#                                        {"integralType":12,"isShow":'false',"name":"星石配置"},{"integralType":13,"isShow":'false',"name":"材料12配置"},
-#                                        {"integralType":14,"isShow":'false',"name":"材料13配置"},{"integralType":15,"isShow":'false',"name":"材料14配置"}],
-#         "nftProductionDisposition":[{"productMaterials":1,"currency":1,"orderNum":1}],"nftPowerConfig":{},
-#         "nftPlunderDisposition":{"durabilityLimit2":0,"durabilityLimit":0,"energy":0,"physicalPowerScore":0,"lifeScore":0},
-#         "nftAttrConfig":{"attrType":6,"nftAttrConfigCostBOS":[]},"lifeMode":1,"consumeMode":1}
-#
-# headers = {'Accept': 'application/json, text/plain', 'Accept-Language': 'zh-CN,zh;q=0.9', 'Authorization': TestRequest.token}
-#
-#         response = requests.request("post", url=url, json=data, headers=headers)
-#         print(response.json())
-#         assert response.json()['code'] == 0
-#
+    # 创建藏品
+    def test_case_collection(self):
+        data = variable_token()
+        value = data[0]['collection']
+        for case in value:
+            print(case)
+            if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
+                if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') \
+                        and jsonpath.jsonpath(case, '$..data') and jsonpath.jsonpath(case, '$..headers'):
+                    print(case['name'])
+                    print(case['validate'])
+                    headers = case['requests']['headers']
+                    url = (case['requests']['url'])
+                    method = (case['requests']['method'])
+                    data = (case['requests']['data'])
+                    result = RequestUtil().send_requests(method, url, headers, data)
+                    res = json.loads(result)
+                    log_util.log_info('用例标题:{},请求地址为:{}, 请求参数为:{}'.format(case['name'], url, data))
+                    log_util.log_info('实际结果接口返回信息为:{}'.format(result))
+                    log_util.log_info('预期结果：code 应为: {}'.format(case['validate'][0]['equals']['code']))
+                    assert res['code'] == case['validate'][0]['equals']['code']
+                else:
+                    print("在yml文件requests目录下必须要有method,url,data,headers")
+            else:
+                print("yml一级关键字必须包含:name,requests,validate")
+
+
 #     # 编辑藏品
 #     def test_case_editcollection(self):
 #         url = 'higher8pre.douxiangapp.com/dboxAdmin/v1/nft/10000148'

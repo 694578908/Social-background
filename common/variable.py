@@ -1,7 +1,7 @@
 from common.yaml_util import YamlUtil
 
 
-def variable():
+def variable_code():
     # 从 extract.yml 中读取 admin_user_15881086121 的值
     code_value = YamlUtil().read_extract_yaml('admin_user_15881086121')
     # 读取测试用例数据
@@ -11,6 +11,21 @@ def variable():
     data = YamlUtil().read_testcase_yaml('get_token.yml')
     # 将 admin_user_15881086121 的值替换到测试用例数据中
     data['get_token'][0]['requests']['data']['code'] = code_value
+    value = YamlUtil().func_yaml(data)
+    print(f"Result: {value}")
+    return [value]
+
+
+def variable_token():
+    # 从 extract.yml 中读取 admin_user_15881086121 的值
+    code_value = YamlUtil().read_extract_yaml('token')
+    # 读取测试用例数据
+    if code_value is None:
+        # 如果提取数据为None，可以抛出异常或者返回一个默认值
+        raise ValueError("token is None")
+    data = YamlUtil().read_testcase_yaml('get_token.yml')
+    # 将 token 的值替换到测试用例数据中
+    data['collection'][0]['requests']['headers']['Authorization'] = code_value
     value = YamlUtil().func_yaml(data)
     print(f"Result: {value}")
     return [value]
