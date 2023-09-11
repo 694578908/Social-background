@@ -41,22 +41,24 @@ class YamlUtil:
     #                 func_name = str(value)[start + 2:end]
     #                 data[key] = str(value)[0:start] + str(eval(func_name)) + str(value)[end + 1:len(str(value))]
     #     return data
-    def func_yaml(self, data):
+
+    def func_yaml(self, data, variable_whitelist=None):
+        if variable_whitelist is None:
+            variable_whitelist = set()  # 默认情况下，白名单为空
+
         if isinstance(data, dict):
             for key, value in data.items():
-                if '${' in str(value) and '}' in str(value):
-                    start = str(value).index('${')
-                    end = str(value).index('}')
-                    func_name = str(value)[start + 2:end]
+                if isinstance(value, str) and '${' in value and '}' in value:
+                    start = value.index('${')
+                    end = value.index('}')
+                    func_name = value[start + 2:end]
 
-                    # 检查变量命名空间中是否存在 func_name
-                    if func_name in globals() or func_name in locals():
-                        data[key] = str(value)[0:start] + str(eval(func_name)) + str(value)[end + 1:len(str(value))]
-                    else:
-                        # 如果 func_name 未定义，将其替换为一个默认值，或者抛出异常，具体取决于你的需求
-                        data[key] = "code"  # 替换为默认值
-                        # 或者抛出异常
-                        # raise NameError(f"Variable {func_name} is not defined.")
+                    if func_name in variable_whitelist:
+                        # 仅当变量名在白名单中时执行替换操作
+                        data[key] = value[0:start] + str(eval(func_name)) + value[end + 1:]
+                elif isinstance(value, dict):
+                    # 递归处理嵌套的字典
+                    data[key] = self.func_yaml(value, variable_whitelist)
         return data
 
 
