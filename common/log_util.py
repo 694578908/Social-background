@@ -45,4 +45,3 @@ def log_info(message):
     init_logging()  # 确保日志记录器和处理器已经初始化
     # 记录日志信息
     logger.info(message)
-

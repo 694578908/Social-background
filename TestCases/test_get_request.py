@@ -8,6 +8,7 @@ from common.redis_extract import read_redis
 from common.request_util import RequestUtil
 from common.variable import variable_token, variable_code
 from common.yaml_util import YamlUtil
+from config.color import print_centered_ansi
 
 
 class TestRequest:
@@ -66,10 +67,12 @@ class TestRequest:
     def test_case_nft(self):
         data = variable_token()
         value = data[0]['nft']
-        for case in value:
+        for idx, case in enumerate(value, start=1):
             if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
                 if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') \
                         and jsonpath.jsonpath(case, '$..data') and jsonpath.jsonpath(case, '$..headers'):
+                    print_centered_ansi(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>执行第{idx}条用例<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", '33')
+                    print()
                     print(case['name'])
                     print(case['validate'])
                     headers = case['requests']['headers']
@@ -86,3 +89,4 @@ class TestRequest:
                     print("在yml文件requests目录下必须要有method,url,data,headers")
             else:
                 print("yml一级关键字必须包含:name,requests,validate")
+
