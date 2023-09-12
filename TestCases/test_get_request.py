@@ -1,8 +1,6 @@
 import json
-
 import jsonpath
 import pytest
-
 from common import log_util
 from common.redis_extract import read_redis
 from common.request_util import RequestUtil
@@ -59,6 +57,7 @@ class TestRequest:
             else:
                 print("yml一级关键字必须包含:name,requests,validate")
 
+    # 执行所有用例
     def test_case_nft(self):
         data = variable_token()
         value = data[0]['nft']
