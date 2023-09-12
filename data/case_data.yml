@@ -10,7 +10,7 @@ login:
   validate:
     - equals: {code: 0}
 
-get_token:
+code_token:
 - name: 提交验证码
   requests:
     method: post
@@ -24,7 +24,7 @@ get_token:
   validate:
     - equals: {code: 0}
 
-collection:
+nft:
 - name: 创建藏品
   requests:
     method: post
@@ -181,7 +181,7 @@ collection:
 
 - name: 编辑藏品
   requests:
-    method: put
+    method: PUT
     url: http://higher8pre.douxiangapp.com/dboxAdmin/v1/nft/10000175
     headers:
       Content-Type: application/json

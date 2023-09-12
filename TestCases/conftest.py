@@ -6,3 +6,4 @@ from common.yaml_util import YamlUtil
 def clear_yaml():
     YamlUtil().clear_extract_yaml()
     yield
+
