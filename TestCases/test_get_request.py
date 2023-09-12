@@ -12,15 +12,12 @@ from config.color import print_centered_ansi
 
 
 class TestRequest:
-    # @pytest.mark.smoke
     # 登录账号密码
     @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('case_data.yml')['login'])
     def test_case_login(self, case):
         if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
             if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') \
                     and jsonpath.jsonpath(case, '$..data') and jsonpath.jsonpath(case, '$..headers'):
-                print(case['name'])
-                print(case['validate'])
                 headers = case['requests']['headers']
                 url = case['requests']['url']
                 data = case['requests']['data']
@@ -45,8 +42,6 @@ class TestRequest:
             if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
                 if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') \
                         and jsonpath.jsonpath(case, '$..data') and jsonpath.jsonpath(case, '$..headers'):
-                    print(case['name'])
-                    print(case['validate'])
                     headers = case['requests']['headers']
                     url = (case['requests']['url'])
                     method = (case['requests']['method'])
@@ -73,8 +68,6 @@ class TestRequest:
                         and jsonpath.jsonpath(case, '$..data') and jsonpath.jsonpath(case, '$..headers'):
                     print_centered_ansi(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>执行第{idx}条用例<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", '33')
                     print()
-                    print(case['name'])
-                    print(case['validate'])
                     headers = case['requests']['headers']
                     url = (case['requests']['url'])
                     method = (case['requests']['method'])
@@ -89,4 +82,3 @@ class TestRequest:
                     print("在yml文件requests目录下必须要有method,url,data,headers")
             else:
                 print("yml一级关键字必须包含:name,requests,validate")
-
