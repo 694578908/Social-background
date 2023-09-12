@@ -2,8 +2,21 @@ import logging
 import os
 import time
 
+import logging
+import os
+import time
 
-def log_info(message):
+# 创建一个全局的日志记录器和处理器
+logger = None
+console = None
+
+
+def init_logging():
+    global logger, console
+
+    if logger is not None:
+        return  # 如果已经初始化，直接返回
+
     root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     log_path = os.path.join(root_path, "log")
     # 定义日志位置和文件名
@@ -30,5 +43,10 @@ def log_info(message):
     # 将日志输出渠道添加到日志收集器中
     logger.addHandler(filelogger)
     logger.addHandler(console)
+
+
+def log_info(message):
+    init_logging()  # 确保日志记录器和处理器已经初始化
     # 记录日志信息
     logger.info(message)
+
