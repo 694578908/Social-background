@@ -457,3 +457,29 @@ nft:
       exclusiveRepertory: null
   validate:
     - equals: {code: 1}
+
+- name: 上架10000175藏品
+  requests:
+    method: put
+    url: http://higher8pre.douxiangapp.com/dboxAdmin/v1/nft/updateIsOnline?isOnline=0
+    headers:
+      Content-Type: application/json
+      Authorization: ${token}
+    data:
+      ids:
+        - '10000175'
+  validate:
+    - equals: {code: 2}
+
+- name: 下架10000175藏品
+  requests:
+    method: put
+    url: http://higher8pre.douxiangapp.com/dboxAdmin/v1/nft/updateIsOnline?isOnline=1
+    headers:
+      Content-Type: application/json
+      Authorization: ${token}
+    data:
+      ids:
+        - '10000175'
+  validate:
+    - equals: {code: 2}
