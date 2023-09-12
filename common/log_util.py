@@ -2,10 +2,6 @@ import logging
 import os
 import time
 
-import logging
-import os
-import time
-
 # 创建一个全局的日志记录器和处理器
 logger = None
 console = None
