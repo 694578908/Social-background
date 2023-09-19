@@ -7,12 +7,20 @@ from common.request_util import RequestUtil
 from common.variable import variable_token, variable_code
 from common.yaml_util import YamlUtil
 from config.color import print_centered_ansi
-
+from common.count import count
 
 class TestRequest:
+    # test_case_counter = 0  # 类级别的测试用例计数器
+    #
+    # def count(self):
+    #     separator = '>' * 20
+    #     TestRequest.test_case_counter += 1  # 递增类级别的测试用例计数器
+    #     print_centered_ansi(f"\n{separator}这是第{TestRequest.count}条用例{separator}\n", '33')
+
     # 登录账号密码
     @pytest.mark.parametrize('case', YamlUtil().read_testcase_yaml('case_data.yml')['login'])
     def test_case_login(self, case):
+        count(case)
         if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
             if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') \
                     and jsonpath.jsonpath(case, '$..data') and jsonpath.jsonpath(case, '$..headers'):
@@ -37,6 +45,7 @@ class TestRequest:
         data = variable_code()
         value = data[0]['code_token']
         for case in value:
+            count(case)
             if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
                 if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') \
                         and jsonpath.jsonpath(case, '$..data') and jsonpath.jsonpath(case, '$..headers'):
@@ -57,16 +66,14 @@ class TestRequest:
             else:
                 print("yml一级关键字必须包含:name,requests,validate")
 
-    # 执行所有用例
     def test_case_nft(self):
         data = variable_token()
         value = data[0]['nft']
-        for idx, case in enumerate(value, start=1):
+        for case in value:
+            count(case)
             if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
                 if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') \
                         and jsonpath.jsonpath(case, '$..data') and jsonpath.jsonpath(case, '$..headers'):
-                    print_centered_ansi(f">>>>>>>>>>>>>>>>>>>>>>>>>>>>>执行第{idx}条用例<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", '33')
-                    print()
                     headers = case['requests']['headers']
                     url = (case['requests']['url'])
                     method = (case['requests']['method'])
@@ -81,3 +88,27 @@ class TestRequest:
                     print("在yml文件requests目录下必须要有method,url,data,headers")
             else:
                 print("yml一级关键字必须包含:name,requests,validate")
+
+    # 执行所有用例
+    # def test_case_nft(self):
+    #     data = variable_token()
+    #     value = data[0]['nft']
+    #     for idx, case in enumerate(value, start=1):
+    #         print_centered_ansi(f"\n{separator}这是第{idx}条用例{separator}\n", '33')
+    #         if 'name' in case.keys() and 'requests' in case.keys() and 'validate' in case.keys():
+    #             if jsonpath.jsonpath(case, '$..url') and jsonpath.jsonpath(case, '$..method') \
+    #                     and jsonpath.jsonpath(case, '$..data') and jsonpath.jsonpath(case, '$..headers'):
+    #                 headers = case['requests']['headers']
+    #                 url = (case['requests']['url'])
+    #                 method = (case['requests']['method'])
+    #                 data = (case['requests']['data'])
+    #                 result = RequestUtil().send_requests(method, url, headers, data)
+    #                 res = (json.loads(result))
+    #                 log_util.log_info('用例标题:{},请求地址为:{}, 请求参数为:{}'.format(case['name'], url, data))
+    #                 log_util.log_info('实际结果接口返回信息为:{}'.format(result))
+    #                 log_util.log_info('预期结果：code 应为: {}'.format(case['validate'][0]['equals']['code']))
+    #                 assert res['code'] == case['validate'][0]['equals']['code']
+    #             else:
+    #                 print("在yml文件requests目录下必须要有method,url,data,headers")
+    #         else:
+    #             print("yml一级关键字必须包含:name,requests,validate")

@@ -17,4 +17,3 @@ def print_centered_ansi(text, color_code):
     centered_text = f"\033[{color_code}m{left_fill}{text}{right_fill}\033[0m"
     # 打印居中文本
     print(centered_text)
-
