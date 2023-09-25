@@ -30,18 +30,6 @@ class YamlUtil:
             value = yaml.load(stream=f, Loader=yaml.FullLoader)
             return value
 
-    # 定位"${}"
-    # def func_yaml(self, data):
-    #     # isinstance判断数据类型，TRUE
-    #     if isinstance(data, dict):
-    #         for key, value in data.items():
-    #             if '${' in str(value) and '}' in str(value):
-    #                 start = str(value).index('${')
-    #                 end = str(value).index('}')
-    #                 func_name = str(value)[start + 2:end]
-    #                 data[key] = str(value)[0:start] + str(eval(func_name)) + str(value)[end + 1:len(str(value))]
-    #     return data
-
     def func_yaml(self, data, variable_whitelist=None):
         if variable_whitelist is None:
             variable_whitelist = set()  # 默认情况下，白名单为空
@@ -60,8 +48,3 @@ class YamlUtil:
                     # 递归处理嵌套的字典
                     data[key] = self.func_yaml(value, variable_whitelist)
         return data
-
-
-
-
-
